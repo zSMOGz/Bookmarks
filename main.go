@@ -2,9 +2,11 @@ package main
 
 import "fmt"
 
+type bookmarkMap = map[string]string
+
 func main() {
 	fmt.Println("Менеджер закладок")
-	bookmarks := map[string]string{}
+	bookmarks := bookmarkMap{}
 
 	isContinue := true
 
@@ -21,7 +23,7 @@ func printCommandMenu() {
 	fmt.Println("4. Выход")
 }
 
-func doCommandMenu(bookmarks map[string]string) bool {
+func doCommandMenu(bookmarks bookmarkMap) bool {
 	printCommandMenu()
 
 	command := 0
@@ -29,11 +31,14 @@ func doCommandMenu(bookmarks map[string]string) bool {
 
 	switch command {
 	case 1:
-		showBookmarks(bookmarks)
+		printBookmarks(bookmarks)
 	case 2:
-		addBookmark(bookmarks)
+		addBookmark(bookmarks,
+			inputKeyBookmark(),
+			inputValueBookmark())
 	case 3:
-		deleteBookmark(bookmarks)
+		deleteBookmark(bookmarks,
+			inputKeyBookmark())
 	case 4:
 		return false
 	default:
@@ -45,16 +50,29 @@ func doCommandMenu(bookmarks map[string]string) bool {
 	return true
 }
 
-func showBookmarks(bookmarks map[string]string) {
-	fmt.Println(bookmarks)
+func printBookmarks(bookmarks bookmarkMap) {
+	if len(bookmarks) == 0 {
+		fmt.Println("Закладок нет")
+	}
+	for key, value := range bookmarks {
+		fmt.Println(key,
+			": ",
+			value)
+	}
 }
 
-func addBookmark(bookmarks map[string]string) {
-	bookmarks[inputKeyBookmark()] = inputValueBookmark()
+func addBookmark(bookmarks bookmarkMap,
+	newBookmarkKey string,
+	newBookmarkValue string) {
+
+	bookmarks[newBookmarkKey] = newBookmarkValue
 }
 
-func deleteBookmark(bookmarks map[string]string) {
-	delete(bookmarks, inputKeyBookmark())
+func deleteBookmark(bookmarks bookmarkMap,
+	newBookmarkKey string) {
+
+	delete(bookmarks,
+		newBookmarkKey)
 }
 
 func inputKeyBookmark() string {
